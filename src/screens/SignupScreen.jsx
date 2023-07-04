@@ -1,11 +1,19 @@
-import React, { useRef } from "react";
-// import { auth } from "../firebaseApp";
+import { useRef } from "react";
+import { auth } from "../firebaseApp";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { login, logout, selectUser } from "../features/userSlice";
+
+import { useDispatch, useSelector } from "react-redux";
+
 import "./SignupScreen.css";
 
 function SignupScreen() {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
-
+  const dispatch = useDispatch();
   const register = (e) => {
     e.preventDefault();
 
@@ -15,7 +23,12 @@ function SignupScreen() {
         passwordRef.current.value
       )
       .then((authUser) => {
-        console.log(authUser);
+        dispatch(
+          login({
+            uid: authUser.user.uid,
+            email: authUser.user.email,
+          })
+        );
       })
       .catch((error) => {
         alert(error.message);
@@ -25,13 +38,18 @@ function SignupScreen() {
   const signIn = (e) => {
     e.preventDefault();
 
-    auth
-      .signInWithEmailAndPassword(
-        emailRef.current.value,
-        passwordRef.current.value
-      )
+    signInWithEmailAndPassword(
+      auth,
+      emailRef.current.value,
+      passwordRef.current.value
+    )
       .then((authUser) => {
-        console.log(authUser);
+        dispatch(
+          login({
+            uid: authUser.user.uid,
+            email: authUser.user.email,
+          })
+        );
       })
       .catch((error) => alert(error.message));
   };
