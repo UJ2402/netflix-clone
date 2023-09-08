@@ -4,31 +4,23 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { login, logout, selectUser } from "../features/userSlice";
-
-import { useDispatch, useSelector } from "react-redux";
 
 import "./SignupScreen.css";
 
 function SignupScreen() {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
-  const dispatch = useDispatch();
+
   const register = (e) => {
     e.preventDefault();
 
-    auth
-      .createUserWithEmailAndPassword(
-        emailRef.current.value,
-        passwordRef.current.value
-      )
+    createUserWithEmailAndPassword(
+      auth,
+      emailRef.current.value,
+      passwordRef.current.value
+    )
       .then((authUser) => {
-        dispatch(
-          login({
-            uid: authUser.user.uid,
-            email: authUser.user.email,
-          })
-        );
+        console.log(authUser);
       })
       .catch((error) => {
         alert(error.message);
@@ -44,12 +36,7 @@ function SignupScreen() {
       passwordRef.current.value
     )
       .then((authUser) => {
-        dispatch(
-          login({
-            uid: authUser.user.uid,
-            email: authUser.user.email,
-          })
-        );
+        console.log(authUser);
       })
       .catch((error) => alert(error.message));
   };
